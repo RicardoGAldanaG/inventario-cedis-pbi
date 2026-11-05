@@ -26,11 +26,13 @@ table fct_existencia_diaria
 		sourceColumn: sku
 
 	column existencia
-		dataType: int64
+		dataType: double
 		formatString: #,0
 		lineageTag: b2cefb3c-f194-514f-90c8-e996136c55ee
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: existencia
+
+		annotation SummarizationSetBy = Automatic
 
 	column en_cero
 		dataType: boolean
@@ -49,9 +51,8 @@ table fct_existencia_diaria
 		mode: import
 		source =
 				let
-				    Origen = Csv.Document(File.Contents(RutaDatos & "fct_existencia_diaria.csv"), [Delimiter = ",", Columns = 6, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
-				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
-				    Tipos = Table.TransformColumnTypes(Encabezados, {{"fecha", type date}, {"almacen", type text}, {"sku", type text}, {"existencia", Int64.Type}, {"en_cero", type logical}, {"venta_perdida_est", type number}}, "en-US")
+				    Origen = PostgreSQL.Database(Servidor, BaseDatos),
+				    Tabla = Origen{[Schema = "pbi", Item = "fct_existencia_diaria"]}[Data]
 				in
-				    Tipos
+				    Tabla
 

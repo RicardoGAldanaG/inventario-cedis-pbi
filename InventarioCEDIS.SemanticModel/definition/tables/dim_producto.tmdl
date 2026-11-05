@@ -30,9 +30,8 @@ table dim_producto
 		mode: import
 		source =
 				let
-				    Origen = Csv.Document(File.Contents(RutaDatos & "dim_producto.csv"), [Delimiter = ",", Columns = 4, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
-				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
-				    Tipos = Table.TransformColumnTypes(Encabezados, {{"sku", type text}, {"producto", type text}, {"categoria", type text}, {"cliente", type text}}, "en-US")
+				    Origen = PostgreSQL.Database(Servidor, BaseDatos),
+				    Tabla = Origen{[Schema = "pbi", Item = "dim_producto"]}[Data]
 				in
-				    Tipos
+				    Tabla
 

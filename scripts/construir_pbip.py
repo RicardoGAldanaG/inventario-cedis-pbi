@@ -4,6 +4,7 @@ Se vuelve a correr cuando cambian las medidas o las páginas. La ruta de los CSV
 parámetro RutaDatos del modelo (Transformar datos > Parámetros) por si la carpeta se mueve.
 """
 import json
+import sys
 import os
 import uuid
 
@@ -11,6 +12,10 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.normpath(os.path.join(AQUI, ".."))
 DATOS = os.path.join(RAIZ, "datos") + os.sep
 NOMBRE = "InventarioCEDIS"
+# origen del modelo: PostgreSQL (sql/construir.ps1) o, con --csv, los archivos de datos/
+FUENTE = "csv" if "--csv" in sys.argv else "postgres"
+SERVIDOR, BASE = "localhost:5433", "inventario_cedis"
+PARAMETROS = ["Servidor", "BaseDatos"] if FUENTE == "postgres" else ["RutaDatos"]
 NS = uuid.UUID("2f1b7a52-5c0e-4a5e-9d0a-6c1f0e7b3a11")
 tag = lambda *p: str(uuid.uuid5(NS, "/".join(p)))
 
@@ -106,12 +111,18 @@ def tabla_tmdl(nombre, t):
             out += ["", "\t\tannotation UnderlyingDateTimeDataType = Date"]
         out.append("")
     tipos = ", ".join("{" + f'"{c}", {M_TIPO[tp]}' + "}" for c, tp, _ in t["cols"])
-    out += [f"\tpartition {nombre} = m", "\t\tmode: import", "\t\tsource =",
-            "\t\t\t\tlet",
-            f'\t\t\t\t    Origen = Csv.Document(File.Contents(RutaDatos & "{t["csv"]}"), [Delimiter = ",", Columns = {len(t["cols"])}, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),',
-            "\t\t\t\t    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),",
-            f'\t\t\t\t    Tipos = Table.TransformColumnTypes(Encabezados, {{{tipos}}}, "en-US")',
-            "\t\t\t\tin", "\t\t\t\t    Tipos", ""]
+    if FUENTE == "postgres":
+        m = ["\t\t\t\tlet",
+             "\t\t\t\t    Origen = PostgreSQL.Database(Servidor, BaseDatos),",
+             f'\t\t\t\t    Tabla = Origen{{[Schema = "pbi", Item = "{nombre}"]}}[Data]',
+             "\t\t\t\tin", "\t\t\t\t    Tabla"]
+    else:
+        m = ["\t\t\t\tlet",
+             f'\t\t\t\t    Origen = Csv.Document(File.Contents(RutaDatos & "{t["csv"]}"), [Delimiter = ",", Columns = {len(t["cols"])}, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),',
+             "\t\t\t\t    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),",
+             f'\t\t\t\t    Tipos = Table.TransformColumnTypes(Encabezados, {{{tipos}}}, "en-US")',
+             "\t\t\t\tin", "\t\t\t\t    Tipos"]
+    out += [f"\tpartition {nombre} = m", "\t\tmode: import", "\t\tsource ="] + m + [""]
     return "\n".join(out) + "\n"
 
 
@@ -147,7 +158,7 @@ def jdump(ruta, obj):
 def construir_modelo(base):
     d = os.path.join(base, "definition")
     escribir(os.path.join(d, "database.tmdl"), "database\n\tcompatibilityLevel: 1606\n\n")
-    orden = list(TABLAS) + ["RutaDatos"]
+    orden = list(TABLAS) + PARAMETROS
     modelo = ["model Model", "\tculture: es-MX", "\tdefaultPowerBIDataSourceVersion: powerBI_V3",
               "\tsourceQueryCulture: es-MX", "\tdataAccessOptions", "\t\tlegacyRedirects", "\t\treturnErrorValuesAsNull", "",
               "annotation PBI_QueryOrder = " + json.dumps(orden, ensure_ascii=False), "",
@@ -157,11 +168,15 @@ def construir_modelo(base):
     if os.path.exists(os.path.join(d, "cultures", "es-MX.tmdl")):
         modelo += ["", "ref cultureInfo es-MX"]
     escribir(os.path.join(d, "model.tmdl"), "\n".join(modelo) + "\n\n")
-    # en M la diagonal invertida no escapa nada: la ruta de Windows va tal cual
-    escribir(os.path.join(d, "expressions.tmdl"),
-             f'expression RutaDatos = "{DATOS}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]\n'
-             f"\tlineageTag: {tag('e', 'RutaDatos')}\n\n"
-             "\tannotation PBI_ResultType = Text\n\n")
+    # parámetros del origen: Servidor y BaseDatos (PostgreSQL) o RutaDatos (CSV)
+    def parametro(n, valor):
+        return (f'expression {n} = "{valor}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]\n'
+                f"\tlineageTag: {tag('e', n)}\n\n\tannotation PBI_ResultType = Text\n\n")
+    if FUENTE == "postgres":
+        exp = parametro("Servidor", SERVIDOR) + parametro("BaseDatos", BASE)
+    else:
+        exp = parametro("RutaDatos", DATOS)  # en M la diagonal invertida no escapa nada
+    escribir(os.path.join(d, "expressions.tmdl"), exp)
     rel = []
     for ft, fc, tt, tc in RELACIONES:
         rel += [f"relationship {tag('r', ft, fc, tt)}", f"\tfromColumn: {ft}.{fc}", f"\ttoColumn: {tt}.{tc}", ""]
@@ -472,7 +487,7 @@ def main():
     jdump(os.path.join(RAIZ, f"{NOMBRE}.pbip"),
           {"version": "1.0", "artifacts": [{"report": {"path": f"{NOMBRE}.Report"}}], "settings": {}})
     escribir(os.path.join(RAIZ, ".gitignore"), "**/.pbi/localSettings.json\n**/.pbi/cache.abf\n__pycache__/\n")
-    print("PBIP escrito en", RAIZ)
+    print(f"PBIP escrito en {RAIZ} (origen: {FUENTE})")
 
 
 if __name__ == "__main__":

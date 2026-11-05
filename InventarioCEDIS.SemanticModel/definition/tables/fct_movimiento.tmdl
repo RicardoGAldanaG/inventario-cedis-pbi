@@ -42,9 +42,10 @@ table fct_movimiento
 		mode: import
 		source =
 				let
-				    Origen = Csv.Document(File.Contents(RutaDatos & "fct_movimiento.csv"), [Delimiter = ",", Columns = 5, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
-				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
-				    Tipos = Table.TransformColumnTypes(Encabezados, {{"fecha", type date}, {"almacen", type text}, {"sku", type text}, {"tipo", type text}, {"cantidad", Int64.Type}}, "en-US")
+				    Origen = PostgreSQL.Database(Servidor, BaseDatos),
+				    Tabla = Origen{[Schema = "pbi", Item = "fct_movimiento"]}[Data]
 				in
-				    Tipos
+				    Tabla
+
+	annotation PBI_ResultType = Table
 

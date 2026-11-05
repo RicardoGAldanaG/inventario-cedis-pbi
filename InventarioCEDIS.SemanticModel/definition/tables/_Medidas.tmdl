@@ -6,7 +6,7 @@ table _Medidas
 		displayFolder: Existencias
 		lineageTag: 489203ed-4a8d-56c0-99a8-aa4c64ab574a
 
-	measure 'Días-producto' = COUNTROWS ( fct_existencia_diaria )
+	measure Días-producto = COUNTROWS ( fct_existencia_diaria )
 		formatString: #,0
 		displayFolder: Existencias
 		lineageTag: 6f7bd43d-13ca-5d9d-9e5b-f2027855ad2d

@@ -1,5 +1,10 @@
-expression RutaDatos = "C:\Users\aldan\OneDrive\Documentos\GitHub\inventario-cedis-pbi\datos\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
-	lineageTag: 24acc046-f8e3-5a5a-9884-717b53269900
+expression Servidor = "localhost:5433" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: becce277-57e2-5b84-a30f-7cba2664d906
+
+	annotation PBI_ResultType = Text
+
+expression BaseDatos = "inventario_cedis" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: a96c8816-bd04-51d6-8d35-2d9d61c7f295
 
 	annotation PBI_ResultType = Text
 

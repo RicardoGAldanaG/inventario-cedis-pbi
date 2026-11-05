@@ -23,18 +23,22 @@ table fct_validacion
 		sourceColumn: conteo
 
 	column reconstruido
-		dataType: int64
+		dataType: double
 		formatString: #,0
 		lineageTag: 2df41196-4b6d-540b-a91c-ad6e03f1edaa
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: reconstruido
 
+		annotation SummarizationSetBy = Automatic
+
 	column diferencia
-		dataType: int64
+		dataType: double
 		formatString: #,0
 		lineageTag: 2a4441c7-5576-5eb0-b5f3-b2323c3a8037
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: diferencia
+
+		annotation SummarizationSetBy = Automatic
 
 	column coincide_exacto
 		dataType: boolean
@@ -52,9 +56,8 @@ table fct_validacion
 		mode: import
 		source =
 				let
-				    Origen = Csv.Document(File.Contents(RutaDatos & "fct_validacion.csv"), [Delimiter = ",", Columns = 7, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
-				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
-				    Tipos = Table.TransformColumnTypes(Encabezados, {{"almacen", type text}, {"sku", type text}, {"conteo", Int64.Type}, {"reconstruido", Int64.Type}, {"diferencia", Int64.Type}, {"coincide_exacto", type logical}, {"coincide_cero", type logical}}, "en-US")
+				    Origen = PostgreSQL.Database(Servidor, BaseDatos),
+				    Tabla = Origen{[Schema = "pbi", Item = "fct_validacion"]}[Data]
 				in
-				    Tipos
+				    Tabla
 
