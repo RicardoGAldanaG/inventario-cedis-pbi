@@ -3,6 +3,7 @@ table fct_movimiento
 
 	column fecha
 		dataType: dateTime
+		isHidden
 		formatString: yyyy-mm-dd
 		lineageTag: 498a66a7-d0b1-573d-9710-5e3c4108020e
 		summarizeBy: none
@@ -12,12 +13,14 @@ table fct_movimiento
 
 	column almacen
 		dataType: string
+		isHidden
 		lineageTag: 5b2374d9-4ef7-51da-85af-6547c15b0731
 		summarizeBy: none
 		sourceColumn: almacen
 
 	column sku
 		dataType: string
+		isHidden
 		lineageTag: 86294c6a-2446-56bd-80c0-48e1f403cb6a
 		summarizeBy: none
 		sourceColumn: sku

@@ -57,11 +57,11 @@ MEDIDAS = [
     ("Existencia (u)", "CALCULATE ( SUM ( fct_existencia_diaria[existencia] ), LASTDATE ( dim_fecha[fecha] ) )", "#,0", "Existencias"),
     ("Días-producto", "COUNTROWS ( fct_existencia_diaria )", "#,0", "Existencias"),
     ("Días en cero", "CALCULATE ( COUNTROWS ( fct_existencia_diaria ), fct_existencia_diaria[en_cero] = TRUE () )", "#,0", "Existencias"),
-    ("Disponibilidad", "1 - DIVIDE ( [Días en cero], [Días-producto] )", "0.0%", "Existencias"),
+    ("Disponibilidad", "DIVIDE ( [Días-producto] - [Días en cero], [Días-producto] )", "0.0%", "Existencias"),
     ("Productos en cero (último día)", "CALCULATE ( [Días en cero], LASTDATE ( dim_fecha[fecha] ) )", "#,0", "Existencias"),
     ("Venta perdida estimada (u)", "SUM ( fct_existencia_diaria[venta_perdida_est] )", "#,0", "Existencias"),
-    ("Entradas (u)", "CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[cantidad] > 0 )", "#,0", "Movimientos"),
-    ("Salidas (u)", "- CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[cantidad] < 0 )", "#,0", "Movimientos"),
+    ("Entradas (u)", "CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[tipo] = \"Entrada\" )", "#,0", "Movimientos"),
+    ("Salidas (u)", "- CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[tipo] = \"Salida\" )", "#,0", "Movimientos"),
     ("Líneas de movimiento", "COUNTROWS ( fct_movimiento )", "#,0", "Movimientos"),
     ("Ajustes netos (u)", "CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[tipo] IN { \"Ajuste merma\", \"Ajuste conteo\" } )", "#,0", "Movimientos"),
     ("Venta diaria 30 d (u)",
@@ -91,6 +91,8 @@ def tabla_tmdl(nombre, t):
     for c, tipo, op in t["cols"]:
         out.append(f"\tcolumn {c}")
         out.append(f"\t\tdataType: {tipo}")
+        if nombre.startswith("fct_") and c in ("fecha", "almacen", "sku"):
+            out.append("\t\tisHidden")  # se filtra por las dimensiones, no por la llave del hecho
         if op.get("key"):
             out.append("\t\tisKey")
         if tipo in FORMATO:
@@ -152,6 +154,8 @@ def construir_modelo(base):
               "annotation __PBI_TimeIntelligenceEnabled = 0", "",
               'annotation PBI_ProTooling = ["DevMode"]', ""]
     modelo += [f"ref table {t}" for t in list(TABLAS) + ["_Medidas"]]
+    if os.path.exists(os.path.join(d, "cultures", "es-MX.tmdl")):
+        modelo += ["", "ref cultureInfo es-MX"]
     escribir(os.path.join(d, "model.tmdl"), "\n".join(modelo) + "\n\n")
     # en M la diagonal invertida no escapa nada: la ruta de Windows va tal cual
     escribir(os.path.join(d, "expressions.tmdl"),
@@ -313,7 +317,7 @@ def texto(nombre, pos, parrafos, alt, z):
             p["horizontalTextAlignment"] = alin
         ps.append(p)
     return {"$schema": VC, "name": nombre,
-            "position": {"x": x, "y": y, "z": z, "height": h, "width": w, "tabOrder": z * 1000},
+            "position": {"x": x, "y": y, "z": z, "height": h, "width": w, "tabOrder": (z - 90) * 10},
             "visual": {"visualType": "textbox",
                        "objects": {"general": [{"properties": {"paragraphs": ps}}]},
                        "visualContainerObjects": {"general": [{"properties": {"altText": lit("'" + alt.replace("'", "''") + "'")}}]},
@@ -354,7 +358,7 @@ DER_W = ANCHO - M - DER_X         # 1016
 PAGINAS = [
     ("existencias", "Existencias", encabezado("existencias", "Existencias", "existencia diaria reconstruida desde el libro de movimientos") + fila(
         ("c_exist", "Existencia (u)", "Existencia al último día (u)", "Tarjeta con la existencia total en unidades al último día del periodo filtrado."),
-        ("c_cero", "Productos en cero (último día)", "Productos en cero al último día", "Tarjeta con cuántas combinaciones de CEDIS y producto están en cero el último día."),
+        ("c_cero", "Productos en cero (último día)", "CEDIS-producto en cero al último día", "Tarjeta con cuántas combinaciones de CEDIS y producto están en cero el último día."),
         ("c_disp", "Disponibilidad", "Disponibilidad (días con existencia)", "Tarjeta con la parte de los días-producto que tuvo existencia."),
         ("c_perd", "Venta perdida estimada (u)", "Venta perdida estimada (u)", "Tarjeta con las unidades que se dejaron de vender por estar en cero, sin control de sustitución."),
     ) + [
@@ -381,7 +385,7 @@ PAGINAS = [
     ) + [
         visual("k_mes", "clusteredColumnChart", (M, CUERPO_Y, 820, 300),
                {"Category": proj(col("dim_fecha", "anio_mes"), activo=True), "Y": proj(med("Entradas (u)"), med("Salidas (u)"))},
-               "Entradas y salidas por mes (u)", "Gráfica de columnas con entradas y salidas de unidades por mes.", 5),
+               "Entradas y salidas por mes (u) · noviembre 2026 llega al día 4", "Gráfica de columnas con entradas y salidas de unidades por mes.", 5),
         visual("b_tipo", "clusteredBarChart", (M + 820 + G, CUERPO_Y, UTIL - 820 - G, 300),
                {"Category": proj(col("fct_movimiento", "tipo"), activo=True), "Y": proj(med("Líneas de movimiento"))},
                "Registros por tipo de movimiento", "Gráfica de barras con el número de registros por tipo de movimiento.", 6,
@@ -453,7 +457,11 @@ def main():
             # se borran los archivos generados; las carpetas vacías se toleran porque
             # OneDrive puede retenerlas un momento mientras sincroniza
             for raiz, _, archivos in os.walk(p, topdown=False):
+                if any(x in raiz.split(os.sep) for x in (".pbi", "cultures")):
+                    continue  # caché, ajustes del editor y esquema de idioma de Power BI
                 for a in archivos:
+                    if a == "diagramLayout.json":
+                        continue
                     os.remove(os.path.join(raiz, a))
                 try:
                     os.rmdir(raiz)

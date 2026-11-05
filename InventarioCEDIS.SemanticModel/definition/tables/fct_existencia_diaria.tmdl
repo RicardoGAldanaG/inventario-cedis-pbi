@@ -3,6 +3,7 @@ table fct_existencia_diaria
 
 	column fecha
 		dataType: dateTime
+		isHidden
 		formatString: yyyy-mm-dd
 		lineageTag: ab11823e-7d7c-5598-8239-a1a16c6736d6
 		summarizeBy: none
@@ -12,12 +13,14 @@ table fct_existencia_diaria
 
 	column almacen
 		dataType: string
+		isHidden
 		lineageTag: 97dd072a-e851-5fb8-af7d-8c6613b0e592
 		summarizeBy: none
 		sourceColumn: almacen
 
 	column sku
 		dataType: string
+		isHidden
 		lineageTag: 69a31586-d5d3-58b1-bf23-c4b54445c763
 		summarizeBy: none
 		sourceColumn: sku

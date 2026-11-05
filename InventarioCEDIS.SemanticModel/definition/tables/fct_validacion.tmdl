@@ -3,12 +3,14 @@ table fct_validacion
 
 	column almacen
 		dataType: string
+		isHidden
 		lineageTag: 0429f339-b2f2-5bd7-b3ae-9dd8fc4d1444
 		summarizeBy: none
 		sourceColumn: almacen
 
 	column sku
 		dataType: string
+		isHidden
 		lineageTag: eec89eb6-203e-573e-9c0f-95b4fac3ec1f
 		summarizeBy: none
 		sourceColumn: sku

@@ -16,7 +16,7 @@ table _Medidas
 		displayFolder: Existencias
 		lineageTag: 255d3bd9-37e8-5d16-9912-f783973398ac
 
-	measure Disponibilidad = 1 - DIVIDE ( [Días en cero], [Días-producto] )
+	measure Disponibilidad = DIVIDE ( [Días-producto] - [Días en cero], [Días-producto] )
 		formatString: 0.0%
 		displayFolder: Existencias
 		lineageTag: e37a220d-0cb9-5f08-8672-b362aaf5209c
@@ -31,12 +31,12 @@ table _Medidas
 		displayFolder: Existencias
 		lineageTag: 8dbd367c-b19c-5bd9-9a66-e60d058b2bdc
 
-	measure 'Entradas (u)' = CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[cantidad] > 0 )
+	measure 'Entradas (u)' = CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[tipo] = "Entrada" )
 		formatString: #,0
 		displayFolder: Movimientos
 		lineageTag: c6126730-0ca4-59fd-bf7b-034da3cfb26c
 
-	measure 'Salidas (u)' = - CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[cantidad] < 0 )
+	measure 'Salidas (u)' = - CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[tipo] = "Salida" )
 		formatString: #,0
 		displayFolder: Movimientos
 		lineageTag: 85958362-c7c0-55a8-9d0d-a9f6f488a0eb
