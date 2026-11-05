@@ -1,0 +1,47 @@
+table fct_movimiento
+	lineageTag: 4ca9dd53-3765-5b65-b034-24a0989c754e
+
+	column fecha
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 498a66a7-d0b1-573d-9710-5e3c4108020e
+		summarizeBy: none
+		sourceColumn: fecha
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column almacen
+		dataType: string
+		lineageTag: 5b2374d9-4ef7-51da-85af-6547c15b0731
+		summarizeBy: none
+		sourceColumn: almacen
+
+	column sku
+		dataType: string
+		lineageTag: 86294c6a-2446-56bd-80c0-48e1f403cb6a
+		summarizeBy: none
+		sourceColumn: sku
+
+	column tipo
+		dataType: string
+		lineageTag: 3bb83b56-2a53-55cb-8ed9-e4ba65bad976
+		summarizeBy: none
+		sourceColumn: tipo
+
+	column cantidad
+		dataType: int64
+		formatString: #,0
+		lineageTag: d1ae41e7-318c-59b1-8904-e1e0c263d12b
+		summarizeBy: none
+		sourceColumn: cantidad
+
+	partition fct_movimiento = m
+		mode: import
+		source =
+				let
+				    Origen = Csv.Document(File.Contents(RutaDatos & "fct_movimiento.csv"), [Delimiter = ",", Columns = 5, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Encabezados, {{"fecha", type date}, {"almacen", type text}, {"sku", type text}, {"tipo", type text}, {"cantidad", Int64.Type}}, "en-US")
+				in
+				    Tipos
+

@@ -1,0 +1,147 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "t_dif",
+  "position": {
+    "x": 650,
+    "y": 395,
+    "z": 7,
+    "height": 305,
+    "width": 610,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_almacen"
+                    }
+                  },
+                  "Property": "nombre"
+                }
+              },
+              "queryRef": "dim_almacen.nombre",
+              "nativeQueryRef": "nombre"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_producto"
+                    }
+                  },
+                  "Property": "producto"
+                }
+              },
+              "queryRef": "dim_producto.producto",
+              "nativeQueryRef": "producto"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Conteo físico (u)"
+                }
+              },
+              "queryRef": "_Medidas.Conteo físico (u)",
+              "nativeQueryRef": "Conteo físico (u)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Reconstruido (u)"
+                }
+              },
+              "queryRef": "_Medidas.Reconstruido (u)",
+              "nativeQueryRef": "Reconstruido (u)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Error medio (u)"
+                }
+              },
+              "queryRef": "_Medidas.Error medio (u)",
+              "nativeQueryRef": "Error medio (u)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Medidas"
+                  }
+                },
+                "Property": "Error medio (u)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Productos con mayor diferencia'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Tabla de productos ordenada por la diferencia entre conteo y reconstrucción.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

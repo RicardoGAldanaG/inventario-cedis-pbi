@@ -1,0 +1,58 @@
+table fct_validacion
+	lineageTag: 59718486-a299-5b94-9c7b-86661e280e90
+
+	column almacen
+		dataType: string
+		lineageTag: 0429f339-b2f2-5bd7-b3ae-9dd8fc4d1444
+		summarizeBy: none
+		sourceColumn: almacen
+
+	column sku
+		dataType: string
+		lineageTag: eec89eb6-203e-573e-9c0f-95b4fac3ec1f
+		summarizeBy: none
+		sourceColumn: sku
+
+	column conteo
+		dataType: int64
+		formatString: #,0
+		lineageTag: 61a92601-4a5d-5903-9bde-86695e4bcb60
+		summarizeBy: none
+		sourceColumn: conteo
+
+	column reconstruido
+		dataType: int64
+		formatString: #,0
+		lineageTag: 2df41196-4b6d-540b-a91c-ad6e03f1edaa
+		summarizeBy: none
+		sourceColumn: reconstruido
+
+	column diferencia
+		dataType: int64
+		formatString: #,0
+		lineageTag: 2a4441c7-5576-5eb0-b5f3-b2323c3a8037
+		summarizeBy: none
+		sourceColumn: diferencia
+
+	column coincide_exacto
+		dataType: boolean
+		lineageTag: f07ea475-122b-5234-b130-b7bf0864f3bd
+		summarizeBy: none
+		sourceColumn: coincide_exacto
+
+	column coincide_cero
+		dataType: boolean
+		lineageTag: c0b0382c-9222-5265-9474-e43987ec1dc7
+		summarizeBy: none
+		sourceColumn: coincide_cero
+
+	partition fct_validacion = m
+		mode: import
+		source =
+				let
+				    Origen = Csv.Document(File.Contents(RutaDatos & "fct_validacion.csv"), [Delimiter = ",", Columns = 7, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Encabezados, {{"almacen", type text}, {"sku", type text}, {"conteo", Int64.Type}, {"reconstruido", Int64.Type}, {"diferencia", Int64.Type}, {"coincide_exacto", type logical}, {"coincide_cero", type logical}}, "en-US")
+				in
+				    Tipos
+

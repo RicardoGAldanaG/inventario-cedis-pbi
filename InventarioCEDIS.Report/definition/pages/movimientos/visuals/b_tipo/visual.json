@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "b_tipo",
+  "position": {
+    "x": 830,
+    "y": 135,
+    "z": 6,
+    "height": 300,
+    "width": 430,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "barChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_movimiento"
+                    }
+                  },
+                  "Property": "tipo"
+                }
+              },
+              "queryRef": "fct_movimiento.tipo",
+              "nativeQueryRef": "tipo",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Líneas de movimiento"
+                }
+              },
+              "queryRef": "_Medidas.Líneas de movimiento",
+              "nativeQueryRef": "Líneas de movimiento"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Registros por tipo de movimiento'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Gráfica de barras con el número de registros por tipo de movimiento.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

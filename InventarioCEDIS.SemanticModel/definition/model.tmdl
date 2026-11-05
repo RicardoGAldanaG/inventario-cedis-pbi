@@ -1,0 +1,22 @@
+model Model
+	culture: es-MX
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-MX
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["dim_fecha", "dim_almacen", "dim_producto", "fct_movimiento", "fct_existencia_diaria", "fct_validacion", "RutaDatos"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_fecha
+ref table dim_almacen
+ref table dim_producto
+ref table fct_movimiento
+ref table fct_existencia_diaria
+ref table fct_validacion
+ref table _Medidas
+

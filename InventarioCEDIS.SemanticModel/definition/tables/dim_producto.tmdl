@@ -1,0 +1,38 @@
+table dim_producto
+	lineageTag: a8f63acd-43d3-552d-8786-d63b41f9ffaa
+
+	column sku
+		dataType: string
+		isKey
+		lineageTag: 5d6a1ba8-1d70-54fd-bd71-5dc3dcc6dbbe
+		summarizeBy: none
+		sourceColumn: sku
+
+	column producto
+		dataType: string
+		lineageTag: a1e17e40-45b8-53ed-9cde-63891652a82c
+		summarizeBy: none
+		sourceColumn: producto
+
+	column categoria
+		dataType: string
+		lineageTag: 2313e7dc-1af6-5478-9267-2ab15e751ce2
+		summarizeBy: none
+		sourceColumn: categoria
+
+	column cliente
+		dataType: string
+		lineageTag: 6b1a05b7-3fab-5fca-93c1-70c84ac04386
+		summarizeBy: none
+		sourceColumn: cliente
+
+	partition dim_producto = m
+		mode: import
+		source =
+				let
+				    Origen = Csv.Document(File.Contents(RutaDatos & "dim_producto.csv"), [Delimiter = ",", Columns = 4, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Encabezados, {{"sku", type text}, {"producto", type text}, {"categoria", type text}, {"cliente", type text}}, "en-US")
+				in
+				    Tipos
+

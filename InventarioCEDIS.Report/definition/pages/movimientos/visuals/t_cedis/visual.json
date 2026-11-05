@@ -1,0 +1,171 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "t_cedis",
+  "position": {
+    "x": 20,
+    "y": 450,
+    "z": 7,
+    "height": 250,
+    "width": 1240,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_almacen"
+                    }
+                  },
+                  "Property": "nombre"
+                }
+              },
+              "queryRef": "dim_almacen.nombre",
+              "nativeQueryRef": "nombre"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Entradas (u)"
+                }
+              },
+              "queryRef": "_Medidas.Entradas (u)",
+              "nativeQueryRef": "Entradas (u)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Salidas (u)"
+                }
+              },
+              "queryRef": "_Medidas.Salidas (u)",
+              "nativeQueryRef": "Salidas (u)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Ajustes netos (u)"
+                }
+              },
+              "queryRef": "_Medidas.Ajustes netos (u)",
+              "nativeQueryRef": "Ajustes netos (u)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Existencia (u)"
+                }
+              },
+              "queryRef": "_Medidas.Existencia (u)",
+              "nativeQueryRef": "Existencia (u)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Venta diaria 30 d (u)"
+                }
+              },
+              "queryRef": "_Medidas.Venta diaria 30 d (u)",
+              "nativeQueryRef": "Venta diaria 30 d (u)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Días de cobertura"
+                }
+              },
+              "queryRef": "_Medidas.Días de cobertura",
+              "nativeQueryRef": "Días de cobertura"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Disponibilidad"
+                }
+              },
+              "queryRef": "_Medidas.Disponibilidad",
+              "nativeQueryRef": "Disponibilidad"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Resumen por CEDIS'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Tabla por CEDIS con entradas, salidas, ajustes, existencia, venta diaria, días de cobertura y disponibilidad.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

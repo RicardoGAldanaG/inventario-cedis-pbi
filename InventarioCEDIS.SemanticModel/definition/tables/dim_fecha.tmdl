@@ -1,0 +1,71 @@
+table dim_fecha
+	lineageTag: 9cc469b0-c61e-56c8-b853-fdf43c46ac72
+	dataCategory: Time
+
+	column fecha
+		dataType: dateTime
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: 65c93c30-aa57-5964-a055-59bfc8d1afa2
+		summarizeBy: none
+		sourceColumn: fecha
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column anio
+		dataType: int64
+		formatString: #,0
+		lineageTag: b9d5b9d8-a914-5199-9eff-546b236c8bfe
+		summarizeBy: none
+		sourceColumn: anio
+
+	column mes
+		dataType: int64
+		formatString: #,0
+		lineageTag: 784c5e2e-a51c-5680-81a2-59753695e539
+		summarizeBy: none
+		sourceColumn: mes
+
+	column anio_mes
+		dataType: string
+		lineageTag: 0d654341-854d-5ded-9427-f2c092d48dd5
+		summarizeBy: none
+		sourceColumn: anio_mes
+
+	column nombre_mes
+		dataType: string
+		lineageTag: 6ee4f934-2067-5506-9e3c-4a1b7cc796e4
+		summarizeBy: none
+		sourceColumn: nombre_mes
+		sortByColumn: mes
+
+	column dia_semana
+		dataType: int64
+		formatString: #,0
+		lineageTag: d9d88405-c39b-516b-a037-a5603b2b2715
+		summarizeBy: none
+		sourceColumn: dia_semana
+
+	column nombre_dia
+		dataType: string
+		lineageTag: 241e98f7-ba79-54ae-9680-9ce0e0c28cfb
+		summarizeBy: none
+		sourceColumn: nombre_dia
+		sortByColumn: dia_semana
+
+	column es_fin_de_semana
+		dataType: boolean
+		lineageTag: e8bb437f-9e80-5f81-8114-67c8fdef6492
+		summarizeBy: none
+		sourceColumn: es_fin_de_semana
+
+	partition dim_fecha = m
+		mode: import
+		source =
+				let
+				    Origen = Csv.Document(File.Contents(RutaDatos & "dim_fecha.csv"), [Delimiter = ",", Columns = 8, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Encabezados, {{"fecha", type date}, {"anio", Int64.Type}, {"mes", Int64.Type}, {"anio_mes", type text}, {"nombre_mes", type text}, {"dia_semana", Int64.Type}, {"nombre_dia", type text}, {"es_fin_de_semana", type logical}}, "en-US")
+				in
+				    Tipos
+

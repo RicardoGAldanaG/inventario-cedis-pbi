@@ -1,0 +1,73 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "c_perd",
+  "position": {
+    "x": 950,
+    "y": 20,
+    "z": 4,
+    "height": 100,
+    "width": 310,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Venta perdida estimada (u)"
+                }
+              },
+              "queryRef": "_Medidas.Venta perdida estimada (u)",
+              "nativeQueryRef": "Venta perdida estimada (u)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Venta perdida estimada (u)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Tarjeta con las unidades que se dejaron de vender por estar en cero, sin control de sustitución.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

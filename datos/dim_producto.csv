@@ -1,0 +1,121 @@
+sku,producto,categoria,cliente
+SKU-1001,Arroz 1 kg,Abarrotes,Cliente F
+SKU-1002,Agua 1.5 L,Bebidas,Cliente B
+SKU-1003,Paracetamol 500 mg,Farmacia,Cliente A
+SKU-1004,Audífonos inalámbricos,Electrónica,Cliente C
+SKU-1005,Detergente 5 kg,Hogar,Cliente E
+SKU-1006,Filtro de aceite,Autopartes,Cliente D
+SKU-1007,Frijol 900 g,Abarrotes,Cliente F
+SKU-1008,Refresco 600 ml,Bebidas,Cliente B
+SKU-1009,Ibuprofeno 400 mg,Farmacia,Cliente A
+SKU-1010,Cargador 33 W,Electrónica,Cliente C
+SKU-1011,Suavizante 3 L,Hogar,Cliente E
+SKU-1012,Balatas delanteras,Autopartes,Cliente D
+SKU-1013,Aceite 1 L,Abarrotes,Cliente F
+SKU-1014,Jugo 1 L,Bebidas,Cliente B
+SKU-1015,Suero oral 625 ml,Farmacia,Cliente A
+SKU-1016,Batería portátil 10000 mAh,Electrónica,Cliente C
+SKU-1017,Papel higiénico 12 pz,Hogar,Cliente E
+SKU-1018,Bujía iridio,Autopartes,Cliente D
+SKU-1019,Azúcar 2 kg,Abarrotes,Cliente F
+SKU-1020,Bebida isotónica 1 L,Bebidas,Cliente B
+SKU-1021,Gel antibacterial 1 L,Farmacia,Cliente A
+SKU-1022,Cable USB-C 1 m,Electrónica,Cliente C
+SKU-1023,Bolsas basura 30 pz,Hogar,Cliente E
+SKU-1024,Anticongelante 4 L,Autopartes,Cliente D
+SKU-1025,Pasta 200 g,Abarrotes,Cliente F
+SKU-1026,Agua mineral 2 L,Bebidas,Cliente B
+SKU-1027,Vendas 10 cm,Farmacia,Cliente A
+SKU-1028,Bocina Bluetooth,Electrónica,Cliente C
+SKU-1029,Limpiador multiusos 1 L,Hogar,Cliente E
+SKU-1030,Aceite 5W-30 4 L,Autopartes,Cliente D
+SKU-1031,Atún 140 g,Abarrotes,Cliente F
+SKU-1032,Té frío 600 ml,Bebidas,Cliente B
+SKU-1033,Vitamina C 1 g,Farmacia,Cliente A
+SKU-1034,Reloj inteligente,Electrónica,Cliente C
+SKU-1035,Esponjas 3 pz,Hogar,Cliente E
+SKU-1036,Escobilla 22 in,Autopartes,Cliente D
+SKU-1037,Café 400 g,Abarrotes,Cliente F
+SKU-1038,Agua 1.5 L · lote 2,Bebidas,Cliente B
+SKU-1039,Paracetamol 500 mg · lote 2,Farmacia,Cliente A
+SKU-1040,Audífonos inalámbricos · lote 2,Electrónica,Cliente C
+SKU-1041,Detergente 5 kg · lote 2,Hogar,Cliente E
+SKU-1042,Filtro de aceite · lote 2,Autopartes,Cliente D
+SKU-1043,Avena 800 g,Abarrotes,Cliente F
+SKU-1044,Refresco 600 ml · lote 2,Bebidas,Cliente B
+SKU-1045,Ibuprofeno 400 mg · lote 2,Farmacia,Cliente A
+SKU-1046,Cargador 33 W · lote 2,Electrónica,Cliente C
+SKU-1047,Suavizante 3 L · lote 2,Hogar,Cliente E
+SKU-1048,Balatas delanteras · lote 2,Autopartes,Cliente D
+SKU-1049,Arroz 1 kg · lote 2,Abarrotes,Cliente F
+SKU-1050,Jugo 1 L · lote 2,Bebidas,Cliente B
+SKU-1051,Suero oral 625 ml · lote 2,Farmacia,Cliente A
+SKU-1052,Batería portátil 10000 mAh · lote 2,Electrónica,Cliente C
+SKU-1053,Papel higiénico 12 pz · lote 2,Hogar,Cliente E
+SKU-1054,Bujía iridio · lote 2,Autopartes,Cliente D
+SKU-1055,Frijol 900 g · lote 2,Abarrotes,Cliente F
+SKU-1056,Bebida isotónica 1 L · lote 2,Bebidas,Cliente B
+SKU-1057,Gel antibacterial 1 L · lote 2,Farmacia,Cliente A
+SKU-1058,Cable USB-C 1 m · lote 2,Electrónica,Cliente C
+SKU-1059,Bolsas basura 30 pz · lote 2,Hogar,Cliente E
+SKU-1060,Anticongelante 4 L · lote 2,Autopartes,Cliente D
+SKU-1061,Aceite 1 L · lote 2,Abarrotes,Cliente F
+SKU-1062,Agua mineral 2 L · lote 2,Bebidas,Cliente B
+SKU-1063,Vendas 10 cm · lote 2,Farmacia,Cliente A
+SKU-1064,Bocina Bluetooth · lote 2,Electrónica,Cliente C
+SKU-1065,Limpiador multiusos 1 L · lote 2,Hogar,Cliente E
+SKU-1066,Aceite 5W-30 4 L · lote 2,Autopartes,Cliente D
+SKU-1067,Azúcar 2 kg · lote 2,Abarrotes,Cliente F
+SKU-1068,Té frío 600 ml · lote 2,Bebidas,Cliente B
+SKU-1069,Vitamina C 1 g · lote 2,Farmacia,Cliente A
+SKU-1070,Reloj inteligente · lote 2,Electrónica,Cliente C
+SKU-1071,Esponjas 3 pz · lote 2,Hogar,Cliente E
+SKU-1072,Escobilla 22 in · lote 2,Autopartes,Cliente D
+SKU-1073,Pasta 200 g · lote 2,Abarrotes,Cliente F
+SKU-1074,Agua 1.5 L · lote 3,Bebidas,Cliente B
+SKU-1075,Paracetamol 500 mg · lote 3,Farmacia,Cliente A
+SKU-1076,Audífonos inalámbricos · lote 3,Electrónica,Cliente C
+SKU-1077,Detergente 5 kg · lote 3,Hogar,Cliente E
+SKU-1078,Filtro de aceite · lote 3,Autopartes,Cliente D
+SKU-1079,Atún 140 g · lote 2,Abarrotes,Cliente F
+SKU-1080,Refresco 600 ml · lote 3,Bebidas,Cliente B
+SKU-1081,Ibuprofeno 400 mg · lote 3,Farmacia,Cliente A
+SKU-1082,Cargador 33 W · lote 3,Electrónica,Cliente C
+SKU-1083,Suavizante 3 L · lote 3,Hogar,Cliente E
+SKU-1084,Balatas delanteras · lote 3,Autopartes,Cliente D
+SKU-1085,Café 400 g · lote 2,Abarrotes,Cliente F
+SKU-1086,Jugo 1 L · lote 3,Bebidas,Cliente B
+SKU-1087,Suero oral 625 ml · lote 3,Farmacia,Cliente A
+SKU-1088,Batería portátil 10000 mAh · lote 3,Electrónica,Cliente C
+SKU-1089,Papel higiénico 12 pz · lote 3,Hogar,Cliente E
+SKU-1090,Bujía iridio · lote 3,Autopartes,Cliente D
+SKU-1091,Avena 800 g · lote 2,Abarrotes,Cliente F
+SKU-1092,Bebida isotónica 1 L · lote 3,Bebidas,Cliente B
+SKU-1093,Gel antibacterial 1 L · lote 3,Farmacia,Cliente A
+SKU-1094,Cable USB-C 1 m · lote 3,Electrónica,Cliente C
+SKU-1095,Bolsas basura 30 pz · lote 3,Hogar,Cliente E
+SKU-1096,Anticongelante 4 L · lote 3,Autopartes,Cliente D
+SKU-1097,Arroz 1 kg · lote 3,Abarrotes,Cliente F
+SKU-1098,Agua mineral 2 L · lote 3,Bebidas,Cliente B
+SKU-1099,Vendas 10 cm · lote 3,Farmacia,Cliente A
+SKU-1100,Bocina Bluetooth · lote 3,Electrónica,Cliente C
+SKU-1101,Limpiador multiusos 1 L · lote 3,Hogar,Cliente E
+SKU-1102,Aceite 5W-30 4 L · lote 3,Autopartes,Cliente D
+SKU-1103,Frijol 900 g · lote 3,Abarrotes,Cliente F
+SKU-1104,Té frío 600 ml · lote 3,Bebidas,Cliente B
+SKU-1105,Vitamina C 1 g · lote 3,Farmacia,Cliente A
+SKU-1106,Reloj inteligente · lote 3,Electrónica,Cliente C
+SKU-1107,Esponjas 3 pz · lote 3,Hogar,Cliente E
+SKU-1108,Escobilla 22 in · lote 3,Autopartes,Cliente D
+SKU-1109,Aceite 1 L · lote 3,Abarrotes,Cliente F
+SKU-1110,Agua 1.5 L · lote 4,Bebidas,Cliente B
+SKU-1111,Paracetamol 500 mg · lote 4,Farmacia,Cliente A
+SKU-1112,Audífonos inalámbricos · lote 4,Electrónica,Cliente C
+SKU-1113,Detergente 5 kg · lote 4,Hogar,Cliente E
+SKU-1114,Filtro de aceite · lote 4,Autopartes,Cliente D
+SKU-1115,Azúcar 2 kg · lote 3,Abarrotes,Cliente F
+SKU-1116,Refresco 600 ml · lote 4,Bebidas,Cliente B
+SKU-1117,Ibuprofeno 400 mg · lote 4,Farmacia,Cliente A
+SKU-1118,Cargador 33 W · lote 4,Electrónica,Cliente C
+SKU-1119,Suavizante 3 L · lote 4,Hogar,Cliente E
+SKU-1120,Balatas delanteras · lote 4,Autopartes,Cliente D

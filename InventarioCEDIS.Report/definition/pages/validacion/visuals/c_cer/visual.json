@@ -1,0 +1,73 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "c_cer",
+  "position": {
+    "x": 640,
+    "y": 20,
+    "z": 3,
+    "height": 100,
+    "width": 300,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Acierto en cero"
+                }
+              },
+              "queryRef": "_Medidas.Acierto en cero",
+              "nativeQueryRef": "Acierto en cero"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Acierto al decir si estaba en cero'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Tarjeta con la parte de los pares donde la reconstrucción y el conteo coinciden en si había o no existencia.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

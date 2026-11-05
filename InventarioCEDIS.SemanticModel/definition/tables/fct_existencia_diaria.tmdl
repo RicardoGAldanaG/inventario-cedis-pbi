@@ -1,0 +1,54 @@
+table fct_existencia_diaria
+	lineageTag: 8073f76f-16f2-509c-99d8-b3a1e64fb4bc
+
+	column fecha
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: ab11823e-7d7c-5598-8239-a1a16c6736d6
+		summarizeBy: none
+		sourceColumn: fecha
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column almacen
+		dataType: string
+		lineageTag: 97dd072a-e851-5fb8-af7d-8c6613b0e592
+		summarizeBy: none
+		sourceColumn: almacen
+
+	column sku
+		dataType: string
+		lineageTag: 69a31586-d5d3-58b1-bf23-c4b54445c763
+		summarizeBy: none
+		sourceColumn: sku
+
+	column existencia
+		dataType: int64
+		formatString: #,0
+		lineageTag: b2cefb3c-f194-514f-90c8-e996136c55ee
+		summarizeBy: none
+		sourceColumn: existencia
+
+	column en_cero
+		dataType: boolean
+		lineageTag: 42a82833-ab9a-5140-af99-a8a71d28c9ea
+		summarizeBy: none
+		sourceColumn: en_cero
+
+	column venta_perdida_est
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 65ceb360-ab21-56eb-9bcd-e3cce887eb57
+		summarizeBy: none
+		sourceColumn: venta_perdida_est
+
+	partition fct_existencia_diaria = m
+		mode: import
+		source =
+				let
+				    Origen = Csv.Document(File.Contents(RutaDatos & "fct_existencia_diaria.csv"), [Delimiter = ",", Columns = 6, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Encabezados, {{"fecha", type date}, {"almacen", type text}, {"sku", type text}, {"existencia", Int64.Type}, {"en_cero", type logical}, {"venta_perdida_est", type number}}, "en-US")
+				in
+				    Tipos
+

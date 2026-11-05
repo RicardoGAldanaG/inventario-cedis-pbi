@@ -1,0 +1,107 @@
+table _Medidas
+	lineageTag: e4bf25a1-4f63-56ce-b082-41dc989e8cbe
+
+	measure 'Existencia (u)' = CALCULATE ( SUM ( fct_existencia_diaria[existencia] ), LASTDATE ( dim_fecha[fecha] ) )
+		formatString: #,0
+		displayFolder: Existencias
+		lineageTag: 489203ed-4a8d-56c0-99a8-aa4c64ab574a
+
+	measure 'Días-producto' = COUNTROWS ( fct_existencia_diaria )
+		formatString: #,0
+		displayFolder: Existencias
+		lineageTag: 6f7bd43d-13ca-5d9d-9e5b-f2027855ad2d
+
+	measure 'Días en cero' = CALCULATE ( COUNTROWS ( fct_existencia_diaria ), fct_existencia_diaria[en_cero] = TRUE () )
+		formatString: #,0
+		displayFolder: Existencias
+		lineageTag: 255d3bd9-37e8-5d16-9912-f783973398ac
+
+	measure Disponibilidad = 1 - DIVIDE ( [Días en cero], [Días-producto] )
+		formatString: 0.0%
+		displayFolder: Existencias
+		lineageTag: e37a220d-0cb9-5f08-8672-b362aaf5209c
+
+	measure 'Productos en cero (último día)' = CALCULATE ( [Días en cero], LASTDATE ( dim_fecha[fecha] ) )
+		formatString: #,0
+		displayFolder: Existencias
+		lineageTag: fee98d79-421f-5710-9511-35ac3babfa75
+
+	measure 'Venta perdida estimada (u)' = SUM ( fct_existencia_diaria[venta_perdida_est] )
+		formatString: #,0
+		displayFolder: Existencias
+		lineageTag: 8dbd367c-b19c-5bd9-9a66-e60d058b2bdc
+
+	measure 'Entradas (u)' = CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[cantidad] > 0 )
+		formatString: #,0
+		displayFolder: Movimientos
+		lineageTag: c6126730-0ca4-59fd-bf7b-034da3cfb26c
+
+	measure 'Salidas (u)' = - CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[cantidad] < 0 )
+		formatString: #,0
+		displayFolder: Movimientos
+		lineageTag: 85958362-c7c0-55a8-9d0d-a9f6f488a0eb
+
+	measure 'Líneas de movimiento' = COUNTROWS ( fct_movimiento )
+		formatString: #,0
+		displayFolder: Movimientos
+		lineageTag: 2e7e71cb-4323-5ab5-8d8b-3c3da684d8dd
+
+	measure 'Ajustes netos (u)' = CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[tipo] IN { "Ajuste merma", "Ajuste conteo" } )
+		formatString: #,0
+		displayFolder: Movimientos
+		lineageTag: 5c50956a-1277-5292-a801-6c8d4583184a
+
+	measure 'Venta diaria 30 d (u)' =
+			VAR fin = MAX ( dim_fecha[fecha] )
+			RETURN DIVIDE ( - CALCULATE ( SUM ( fct_movimiento[cantidad] ), fct_movimiento[tipo] = "Salida", DATESINPERIOD ( dim_fecha[fecha], fin, -30, DAY ) ), 30 )
+		formatString: #,0.0
+		displayFolder: Movimientos
+		lineageTag: 3e8c68b7-384f-591a-b967-7d37c8f4ca37
+
+	measure 'Días de cobertura' = DIVIDE ( [Existencia (u)], [Venta diaria 30 d (u)] )
+		formatString: #,0.0
+		displayFolder: Movimientos
+		lineageTag: f9a3389b-5866-5ac6-8fa3-b1439849a217
+
+	measure 'Pares validados' = COUNTROWS ( fct_validacion )
+		formatString: #,0
+		displayFolder: Validación
+		lineageTag: e2666fca-2605-53f3-bf84-7b6991840adc
+
+	measure 'Coincidencia exacta' = DIVIDE ( CALCULATE ( COUNTROWS ( fct_validacion ), fct_validacion[coincide_exacto] = TRUE () ), [Pares validados] )
+		formatString: 0.0%
+		displayFolder: Validación
+		lineageTag: e443096d-e1ab-58ef-b55f-c48aa1c8e892
+
+	measure 'Acierto en cero' = DIVIDE ( CALCULATE ( COUNTROWS ( fct_validacion ), fct_validacion[coincide_cero] = TRUE () ), [Pares validados] )
+		formatString: 0.0%
+		displayFolder: Validación
+		lineageTag: 27b88947-eb2a-5129-bbc0-fa09de2ab237
+
+	measure 'Error medio (u)' = AVERAGEX ( fct_validacion, ABS ( fct_validacion[diferencia] ) )
+		formatString: #,0.00
+		displayFolder: Validación
+		lineageTag: bb6a28f6-5ce9-5b1e-b548-b9b6c35129b6
+
+	measure 'Conteo físico (u)' = SUM ( fct_validacion[conteo] )
+		formatString: #,0
+		displayFolder: Validación
+		lineageTag: 3ea64602-7731-5c94-81ff-fcdf0b72ded4
+
+	measure 'Reconstruido (u)' = SUM ( fct_validacion[reconstruido] )
+		formatString: #,0
+		displayFolder: Validación
+		lineageTag: 3ebdebf4-fbbd-53fe-8c0a-14c92068ff25
+
+	column Value
+		isHidden
+		formatString: 0
+		lineageTag: 428fb16f-2777-500d-9335-735fbc71130f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Value]
+
+	partition _Medidas = calculated
+		mode: import
+		source = {BLANK()}
+

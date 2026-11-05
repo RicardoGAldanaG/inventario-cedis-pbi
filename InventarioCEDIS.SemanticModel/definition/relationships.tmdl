@@ -1,0 +1,32 @@
+relationship b56ee0e5-ddae-50f1-ba77-444e46c53d2b
+	fromColumn: fct_movimiento.fecha
+	toColumn: dim_fecha.fecha
+
+relationship 9e511bfa-2238-5e50-ae91-af92f75deb5e
+	fromColumn: fct_movimiento.almacen
+	toColumn: dim_almacen.almacen
+
+relationship 9f67e933-a248-5db2-b87b-96b284b66cf0
+	fromColumn: fct_movimiento.sku
+	toColumn: dim_producto.sku
+
+relationship 3bd8893f-ae9d-5c71-ac4f-6e4473d9b1f2
+	fromColumn: fct_existencia_diaria.fecha
+	toColumn: dim_fecha.fecha
+
+relationship 70905ecc-5d77-5713-8fcf-28faf10cf21b
+	fromColumn: fct_existencia_diaria.almacen
+	toColumn: dim_almacen.almacen
+
+relationship fa90dfe3-bb5e-59d9-a4e3-a66066ccb945
+	fromColumn: fct_existencia_diaria.sku
+	toColumn: dim_producto.sku
+
+relationship 189fe205-42d8-5646-abba-d32291855da7
+	fromColumn: fct_validacion.almacen
+	toColumn: dim_almacen.almacen
+
+relationship 94512f82-14fe-561c-bbca-9b959c1f1a14
+	fromColumn: fct_validacion.sku
+	toColumn: dim_producto.sku
+

@@ -1,0 +1,32 @@
+table dim_almacen
+	lineageTag: 5249af87-04ee-5da0-87bb-b9f5d34d7521
+
+	column almacen
+		dataType: string
+		isKey
+		lineageTag: efa514ff-7503-5172-9a16-b7d09bf25815
+		summarizeBy: none
+		sourceColumn: almacen
+
+	column nombre
+		dataType: string
+		lineageTag: acf4b679-4016-52a7-a4b9-383a62ff69ae
+		summarizeBy: none
+		sourceColumn: nombre
+
+	column estado
+		dataType: string
+		lineageTag: 43cb407d-4233-5b9c-84ee-8038e2d41492
+		summarizeBy: none
+		sourceColumn: estado
+
+	partition dim_almacen = m
+		mode: import
+		source =
+				let
+				    Origen = Csv.Document(File.Contents(RutaDatos & "dim_almacen.csv"), [Delimiter = ",", Columns = 3, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Encabezados = Table.PromoteHeaders(Origen, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Encabezados, {{"almacen", type text}, {"nombre", type text}, {"estado", type text}}, "en-US")
+				in
+				    Tipos
+

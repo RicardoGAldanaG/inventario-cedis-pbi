@@ -1,0 +1,110 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "x_val",
+  "position": {
+    "x": 20,
+    "y": 135,
+    "z": 5,
+    "height": 565,
+    "width": 620,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_producto"
+                    }
+                  },
+                  "Property": "sku"
+                }
+              },
+              "queryRef": "dim_producto.sku",
+              "nativeQueryRef": "sku",
+              "active": true
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Conteo físico (u)"
+                }
+              },
+              "queryRef": "_Medidas.Conteo físico (u)",
+              "nativeQueryRef": "Conteo físico (u)"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Medidas"
+                    }
+                  },
+                  "Property": "Reconstruido (u)"
+                }
+              },
+              "queryRef": "_Medidas.Reconstruido (u)",
+              "nativeQueryRef": "Reconstruido (u)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Conteo físico contra existencia reconstruida'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Gráfica de dispersión: cada punto es un producto; sobre la diagonal la reconstrucción coincide con el conteo.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
