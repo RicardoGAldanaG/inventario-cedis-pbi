@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "x_val",
   "position": {
-    "x": 20,
-    "y": 135,
+    "x": 16,
+    "y": 176,
     "z": 5,
-    "height": 565,
-    "width": 620,
+    "height": 528,
+    "width": 500,
     "tabOrder": 5000
   },
   "visual": {
@@ -85,7 +85,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Conteo físico contra existencia reconstruida'"
+                  "Value": "'Conteo físico (X) contra existencia reconstruida (Y)'"
                 }
               }
             }

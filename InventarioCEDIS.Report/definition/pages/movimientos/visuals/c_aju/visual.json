@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "c_aju",
   "position": {
-    "x": 950,
-    "y": 20,
+    "x": 961,
+    "y": 72,
     "z": 4,
-    "height": 100,
-    "width": 310,
+    "height": 92,
+    "width": 303,
     "tabOrder": 4000
   },
   "visual": {
@@ -48,7 +48,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Ajustes netos (u)'"
+                  "Value": "'Ajustes netos por merma y conteo (u)'"
                 }
               }
             }

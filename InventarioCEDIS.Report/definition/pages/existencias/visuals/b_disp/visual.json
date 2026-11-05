@@ -2,15 +2,15 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "b_disp",
   "position": {
-    "x": 270,
-    "y": 420,
+    "x": 248,
+    "y": 450,
     "z": 8,
-    "height": 280,
-    "width": 480,
+    "height": 254,
+    "width": 400,
     "tabOrder": 8000
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "clusteredBarChart",
     "query": {
       "queryState": {
         "Category": {
@@ -28,6 +28,7 @@
               },
               "queryRef": "dim_almacen.nombre",
               "nativeQueryRef": "nombre",
+              "displayName": "CEDIS",
               "active": true
             }
           ]

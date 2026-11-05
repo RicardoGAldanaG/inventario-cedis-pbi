@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "t_cedis",
   "position": {
-    "x": 20,
-    "y": 450,
+    "x": 16,
+    "y": 488,
     "z": 7,
-    "height": 250,
-    "width": 1240,
+    "height": 216,
+    "width": 820,
     "tabOrder": 7000
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_almacen.nombre",
-              "nativeQueryRef": "nombre"
+              "nativeQueryRef": "nombre",
+              "displayName": "CEDIS"
             },
             {
               "field": {

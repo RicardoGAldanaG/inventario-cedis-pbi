@@ -30,10 +30,10 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 SALIDA = os.path.normpath(os.path.join(AQUI, "..", "datos"))
 
 ALMACENES = [
-    ("TLA", "CEDIS Tlalnepantla", "Estado de México", 1.00),
-    ("IZT", "CEDIS Iztapalapa", "Ciudad de México", 1.35),
-    ("QRO", "CEDIS Querétaro", "Querétaro", 0.70),
-    ("GDL", "CEDIS Guadalajara", "Jalisco", 0.85),
+    ("TLA", "Tlalnepantla", "Estado de México", 1.00),
+    ("IZT", "Iztapalapa", "Ciudad de México", 1.35),
+    ("QRO", "Querétaro", "Querétaro", 0.70),
+    ("GDL", "Guadalajara", "Jalisco", 0.85),
 ]
 CATEGORIAS = [
     # categoría, cliente, demanda diaria base (min, max), días de entrega (min, max)

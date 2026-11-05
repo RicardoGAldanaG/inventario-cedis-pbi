@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "t_cero",
   "position": {
-    "x": 760,
-    "y": 420,
+    "x": 660,
+    "y": 450,
     "z": 9,
-    "height": 280,
-    "width": 500,
+    "height": 254,
+    "width": 604,
     "tabOrder": 9000
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_producto.producto",
-              "nativeQueryRef": "producto"
+              "nativeQueryRef": "producto",
+              "displayName": "Producto"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "dim_producto.categoria",
-              "nativeQueryRef": "categoria"
+              "nativeQueryRef": "categoria",
+              "displayName": "Categoría"
             },
             {
               "field": {

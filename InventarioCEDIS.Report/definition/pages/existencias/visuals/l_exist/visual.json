@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "l_exist",
   "position": {
-    "x": 270,
-    "y": 135,
+    "x": 248,
+    "y": 176,
     "z": 7,
-    "height": 270,
-    "width": 990,
+    "height": 262,
+    "width": 1016,
     "tabOrder": 7000
   },
   "visual": {
@@ -67,7 +67,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Existencia diaria reconstruida desde el libro de movimientos'"
+                  "Value": "'Existencia diaria reconstruida (u)'"
                 }
               }
             }

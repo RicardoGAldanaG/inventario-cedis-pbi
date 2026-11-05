@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "c_disp",
   "position": {
-    "x": 640,
-    "y": 20,
+    "x": 646,
+    "y": 72,
     "z": 3,
-    "height": 100,
-    "width": 300,
+    "height": 92,
+    "width": 303,
     "tabOrder": 3000
   },
   "visual": {
@@ -48,7 +48,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Disponibilidad'"
+                  "Value": "'Disponibilidad (días con existencia)'"
                 }
               }
             }

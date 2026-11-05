@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "k_mes",
   "position": {
-    "x": 20,
-    "y": 135,
+    "x": 16,
+    "y": 176,
     "z": 5,
     "height": 300,
-    "width": 800,
+    "width": 820,
     "tabOrder": 5000
   },
   "visual": {
@@ -81,7 +81,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Entradas y salidas por mes'"
+                  "Value": "'Entradas y salidas por mes (u)'"
                 }
               }
             }

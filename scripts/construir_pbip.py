@@ -5,7 +5,6 @@ parámetro RutaDatos del modelo (Transformar datos > Parámetros) por si la carp
 """
 import json
 import os
-import shutil
 import uuid
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -178,9 +177,12 @@ VC = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition
 PG = "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json"
 
 
-def col(ent, prop):
-    return {"field": {"Column": {"Expression": {"SourceRef": {"Entity": ent}}, "Property": prop}},
-            "queryRef": f"{ent}.{prop}", "nativeQueryRef": prop}
+def col(ent, prop, nombre=None):
+    p = {"field": {"Column": {"Expression": {"SourceRef": {"Entity": ent}}, "Property": prop}},
+         "queryRef": f"{ent}.{prop}", "nativeQueryRef": prop}
+    if nombre:
+        p["displayName"] = nombre
+    return p
 
 
 def med(prop):
@@ -217,55 +219,196 @@ def proj(*ps, activo=False):
     return {"projections": ps}
 
 
+# ---- identidad visual: la misma del portafolio (concreto, amarillo de seguridad, acero)
+TINTA, GRIS, LINEA, PANEL, FONDO, MARCO = "#1B232B", "#56616B", "#D3D8D3", "#FBFCFA", "#EEF0EC", "#E2E5E0"
+ACERO, AMBAR, AMBAR_TXT, ACERO_CLARO = "#2F5D7C", "#E3A200", "#7D5600", "#9DB7C9"
+BIEN, MAL = "#2B7A4B", "#B0362C"
+NOMBRE_TEMA = "InventarioCEDIS_tema.json"
+
+
+def solido(c):
+    return {"solid": {"color": c}}
+
+
+TEMA = {
+    "name": "Inventario CEDIS",
+    "dataColors": [ACERO, AMBAR, ACERO_CLARO, TINTA, BIEN, MAL, "#7D8A94", "#C9A55A"],
+    "background": "#FFFFFF", "foreground": TINTA, "tableAccent": AMBAR,
+    "good": BIEN, "bad": MAL, "neutral": AMBAR,
+    "maximum": ACERO, "center": "#F3F5F2", "minimum": MAL,
+    "textClasses": {
+        "callout": {"fontSize": 26, "fontFace": "Segoe UI Semibold", "color": TINTA},
+        "title": {"fontSize": 11, "fontFace": "Segoe UI Semibold", "color": TINTA},
+        "header": {"fontSize": 10, "fontFace": "Segoe UI Semibold", "color": TINTA},
+        "label": {"fontSize": 9, "fontFace": "Segoe UI", "color": GRIS},
+    },
+    "visualStyles": {
+        "*": {"*": {
+            "background": [{"show": True, "color": solido(PANEL), "transparency": 0}],
+            "border": [{"show": True, "color": solido(LINEA), "radius": 6}],
+            "dropShadow": [{"show": False}],
+            "padding": [{"top": 8, "bottom": 10, "left": 12, "right": 12}],
+            "title": [{"show": True, "fontColor": solido(TINTA), "fontSize": 11,
+                       "fontFamily": "Segoe UI Semibold", "alignment": "left"}],
+            "visualHeader": [{"show": True, "foreground": solido(GRIS), "border": solido(PANEL), "background": solido(PANEL)}],
+            "categoryAxis": [{"showAxisTitle": False, "labelColor": solido(GRIS), "fontSize": 9, "gridlineShow": False}],
+            "valueAxis": [{"showAxisTitle": False, "labelColor": solido(GRIS), "fontSize": 9,
+                           "gridlineShow": True, "gridlineColor": solido("#E3E6E2"), "gridlineStyle": "solid"}],
+            "legend": [{"show": True, "position": "Top", "labelColor": solido(GRIS), "fontSize": 9}],
+        }},
+        "page": {"*": {
+            "background": [{"color": solido(FONDO), "transparency": 0}],
+            "outspace": [{"color": solido(MARCO), "transparency": 0}],
+        }},
+        "card": {"*": {
+            "labels": [{"color": solido(TINTA), "fontSize": 26, "fontFamily": "Segoe UI Semibold", "labelDisplayUnits": 1}],
+            "categoryLabels": [{"show": False}],
+            "title": [{"show": True, "fontColor": solido(GRIS), "fontSize": 9, "fontFamily": "Segoe UI"}],
+            "border": [{"show": True, "color": solido(LINEA), "radius": 6}],
+        }},
+        "textbox": {"*": {
+            "background": [{"show": False}], "border": [{"show": False}], "title": [{"show": False}],
+            "visualHeader": [{"show": False}], "padding": [{"top": 0, "bottom": 0, "left": 0, "right": 0}],
+        }},
+        "slicer": {"*": {
+            "title": [{"show": False}],
+            "header": [{"show": False}],
+            "items": [{"fontColor": solido(TINTA), "textSize": 10}],
+        }},
+        "tableEx": {"*": {
+            "columnHeaders": [{"fontColor": solido("#FFFFFF"), "backColor": solido(TINTA), "fontFamily": "Segoe UI Semibold", "fontSize": 10}],
+            "values": [{"fontColor": solido(TINTA), "backColor": solido(PANEL), "backColorSecondary": solido("#F3F5F2"), "fontSize": 10}],
+            "total": [{"fontColor": solido(TINTA), "backColor": solido("#E9ECE8")}],
+            "grid": [{"gridHorizontal": True, "gridHorizontalColor": solido("#E3E6E2"), "gridVertical": False,
+                      "outlineColor": solido(LINEA), "rowPadding": 4}],
+        }},
+        "lineChart": {"*": {"lineStyles": [{"strokeWidth": 2, "showMarker": False}]}},
+        "clusteredBarChart": {"*": {"labels": [{"show": True, "color": solido(TINTA), "fontSize": 9, "labelDisplayUnits": 1}],
+                                     "valueAxis": [{"show": False}]}},
+        "scatterChart": {"*": {"bubbles": [{"bubbleSize": -6}], "dataPoint": [{"defaultColor": solido(ACERO)}]}},
+    },
+}
+
+# ---- rejilla: página de 1280 × 720, margen de 16 px, separación de 12 px
+M, G, ANCHO = 16, 12, 1280
+UTIL = ANCHO - 2 * M
+ENC_Y, ENC_H = 10, 54
+TAR_Y, TAR_H = 72, 92
+CUERPO_Y = TAR_Y + TAR_H + G   # 176
+FONDO_Y = 720 - M              # 704
+
+
+def cuarto(i):
+    w = (UTIL - 3 * G) / 4
+    return round(M + i * (w + G)), round(w)
+
+
+def texto(nombre, pos, parrafos, alt, z):
+    """Cuadro de texto: cada párrafo es (alineación, [(texto, estilo), ...])."""
+    x, y, w, h = pos
+    ps = []
+    for alin, corridas in parrafos:
+        p = {"textRuns": [{"value": t, "textStyle": st} for t, st in corridas]}
+        if alin != "left":
+            p["horizontalTextAlignment"] = alin
+        ps.append(p)
+    return {"$schema": VC, "name": nombre,
+            "position": {"x": x, "y": y, "z": z, "height": h, "width": w, "tabOrder": z * 1000},
+            "visual": {"visualType": "textbox",
+                       "objects": {"general": [{"properties": {"paragraphs": ps}}]},
+                       "visualContainerObjects": {"general": [{"properties": {"altText": lit("'" + alt.replace("'", "''") + "'")}}]},
+                       "drillFilterOtherVisuals": True}}
+
+
+CEJA = {"fontFamily": "Segoe UI Semibold", "fontSize": "9pt", "color": AMBAR_TXT}
+TIT = {"fontFamily": "Segoe UI Semibold", "fontSize": "20pt", "color": TINTA}
+SUB = {"fontFamily": "Segoe UI", "fontSize": "10pt", "color": GRIS}
+DER = {"fontFamily": "Segoe UI", "fontSize": "9pt", "color": GRIS}
+
+
+def encabezado(pagina, titulo, subtitulo):
+    return [
+        texto(f"h_{pagina}", (M, ENC_Y, 860, ENC_H),
+              [("left", [("INVENTARIO CEDIS  ·  DATOS SINTÉTICOS", CEJA)]),
+               ("left", [(titulo, TIT), ("   " + subtitulo, SUB)])],
+              f"Encabezado de la página {titulo}: {subtitulo}", 90),
+        texto(f"h_{pagina}_meta", (ANCHO - M - 360, ENC_Y + 8, 360, ENC_H - 8),
+              [("right", [("4 CEDIS  ·  120 productos", DER)]),
+               ("right", [("1 sep 2025 – 4 nov 2026  ·  conteo físico al 23 oct 2026", DER)])],
+              "Alcance de los datos: 4 CEDIS, 120 productos, del 1 de septiembre de 2025 al 4 de noviembre de 2026.", 91),
+    ]
+
+
+def fila(*tarjetas):
+    out = []
+    for i, (n, m, t, a) in enumerate(tarjetas):
+        x, w = cuarto(i)
+        out.append(tarjeta(n, m, (x, TAR_Y, w, TAR_H), t, a, i + 1))
+    return out
+
+
+IZQ_W = 220                       # columna de segmentadores
+DER_X = M + IZQ_W + G             # 248
+DER_W = ANCHO - M - DER_X         # 1016
+
 PAGINAS = [
-    ("existencias", "Existencias", [
-        tarjeta("c_exist", "Existencia (u)", (20, 20, 300, 100), "Existencia al último día", "Tarjeta con la existencia total en unidades al último día del periodo filtrado.", 1),
-        tarjeta("c_cero", "Productos en cero (último día)", (330, 20, 300, 100), "Productos en cero hoy", "Tarjeta con cuántas combinaciones de CEDIS y producto están en cero el último día.", 2),
-        tarjeta("c_disp", "Disponibilidad", (640, 20, 300, 100), "Disponibilidad", "Tarjeta con la parte de los días-producto que tuvo existencia.", 3),
-        tarjeta("c_perd", "Venta perdida estimada (u)", (950, 20, 310, 100), "Venta perdida estimada (u)", "Tarjeta con las unidades que se dejaron de vender por estar en cero, sin control de sustitución.", 4),
-        visual("s_cedis", "slicer", (20, 135, 240, 180), {"Values": proj(col("dim_almacen", "nombre"), activo=True)}, "CEDIS", "Segmentador por CEDIS.", 5),
-        visual("s_cat", "slicer", (20, 325, 240, 225), {"Values": proj(col("dim_producto", "categoria"), activo=True)}, "Categoría", "Segmentador por categoría de producto.", 6),
-        visual("l_exist", "lineChart", (270, 135, 990, 270),
+    ("existencias", "Existencias", encabezado("existencias", "Existencias", "existencia diaria reconstruida desde el libro de movimientos") + fila(
+        ("c_exist", "Existencia (u)", "Existencia al último día (u)", "Tarjeta con la existencia total en unidades al último día del periodo filtrado."),
+        ("c_cero", "Productos en cero (último día)", "Productos en cero al último día", "Tarjeta con cuántas combinaciones de CEDIS y producto están en cero el último día."),
+        ("c_disp", "Disponibilidad", "Disponibilidad (días con existencia)", "Tarjeta con la parte de los días-producto que tuvo existencia."),
+        ("c_perd", "Venta perdida estimada (u)", "Venta perdida estimada (u)", "Tarjeta con las unidades que se dejaron de vender por estar en cero, sin control de sustitución."),
+    ) + [
+        visual("s_cedis", "slicer", (M, CUERPO_Y, IZQ_W, 168), {"Values": proj(col("dim_almacen", "nombre", "CEDIS"), activo=True)}, "CEDIS", "Segmentador por CEDIS.", 5),
+        visual("s_cat", "slicer", (M, CUERPO_Y + 168 + G, IZQ_W, 196), {"Values": proj(col("dim_producto", "categoria"), activo=True)}, "Categoría", "Segmentador por categoría de producto.", 6),
+        visual("s_mes", "slicer", (M, CUERPO_Y + 168 + 196 + 2 * G, IZQ_W, FONDO_Y - (CUERPO_Y + 168 + 196 + 2 * G)),
+               {"Values": proj(col("dim_fecha", "anio_mes"), activo=True)}, "Mes", "Segmentador por mes.", 10),
+        visual("l_exist", "lineChart", (DER_X, CUERPO_Y, DER_W, 262),
                {"Category": proj(col("dim_fecha", "fecha"), activo=True), "Y": proj(med("Existencia (u)"))},
-               "Existencia diaria reconstruida desde el libro de movimientos", "Gráfica de línea con la existencia diaria reconstruida, de septiembre 2025 a noviembre 2026.", 7),
-        visual("b_disp", "barChart", (270, 420, 480, 280),
-               {"Category": proj(col("dim_almacen", "nombre"), activo=True), "Y": proj(med("Disponibilidad"))},
+               "Existencia diaria reconstruida (u)", "Gráfica de línea con la existencia diaria reconstruida, de septiembre 2025 a noviembre 2026.", 7),
+        visual("b_disp", "clusteredBarChart", (DER_X, CUERPO_Y + 262 + G, 400, FONDO_Y - (CUERPO_Y + 262 + G)),
+               {"Category": proj(col("dim_almacen", "nombre", "CEDIS"), activo=True), "Y": proj(med("Disponibilidad"))},
                "Disponibilidad por CEDIS", "Gráfica de barras con la disponibilidad de cada CEDIS.", 8),
-        visual("t_cero", "tableEx", (760, 420, 500, 280),
-               {"Values": proj(col("dim_producto", "producto"), col("dim_producto", "categoria"), med("Días en cero"), med("Venta perdida estimada (u)"))},
+        visual("t_cero", "tableEx", (DER_X + 400 + G, CUERPO_Y + 262 + G, DER_W - 400 - G, FONDO_Y - (CUERPO_Y + 262 + G)),
+               {"Values": proj(col("dim_producto", "producto", "Producto"), col("dim_producto", "categoria", "Categoría"), med("Días en cero"), med("Venta perdida estimada (u)"))},
                "Productos con más días en cero", "Tabla de productos ordenada por días en cero, con la venta perdida estimada.", 9,
                orden=(med("Días en cero"), "Descending")),
-        visual("s_mes", "slicer", (20, 560, 240, 140), {"Values": proj(col("dim_fecha", "anio_mes"), activo=True)}, "Mes", "Segmentador por mes.", 10),
     ]),
-    ("movimientos", "Movimientos", [
-        tarjeta("c_ent", "Entradas (u)", (20, 20, 300, 100), "Entradas (u)", "Tarjeta con las unidades que entraron a los CEDIS.", 1),
-        tarjeta("c_sal", "Salidas (u)", (330, 20, 300, 100), "Salidas (u)", "Tarjeta con las unidades que salieron de los CEDIS.", 2),
-        tarjeta("c_lin", "Líneas de movimiento", (640, 20, 300, 100), "Líneas de movimiento", "Tarjeta con el número de registros del libro de movimientos.", 3),
-        tarjeta("c_aju", "Ajustes netos (u)", (950, 20, 310, 100), "Ajustes netos (u)", "Tarjeta con las unidades netas de ajustes por merma y por conteo.", 4),
-        visual("k_mes", "clusteredColumnChart", (20, 135, 800, 300),
+    ("movimientos", "Movimientos", encabezado("movimientos", "Movimientos", "entradas, salidas y ajustes del libro de movimientos") + fila(
+        ("c_ent", "Entradas (u)", "Entradas (u)", "Tarjeta con las unidades que entraron a los CEDIS."),
+        ("c_sal", "Salidas (u)", "Salidas (u)", "Tarjeta con las unidades que salieron de los CEDIS."),
+        ("c_lin", "Líneas de movimiento", "Registros en el libro", "Tarjeta con el número de registros del libro de movimientos."),
+        ("c_aju", "Ajustes netos (u)", "Ajustes netos por merma y conteo (u)", "Tarjeta con las unidades netas de ajustes por merma y por conteo."),
+    ) + [
+        visual("k_mes", "clusteredColumnChart", (M, CUERPO_Y, 820, 300),
                {"Category": proj(col("dim_fecha", "anio_mes"), activo=True), "Y": proj(med("Entradas (u)"), med("Salidas (u)"))},
-               "Entradas y salidas por mes", "Gráfica de columnas con entradas y salidas de unidades por mes.", 5),
-        visual("b_tipo", "barChart", (830, 135, 430, 300),
+               "Entradas y salidas por mes (u)", "Gráfica de columnas con entradas y salidas de unidades por mes.", 5),
+        visual("b_tipo", "clusteredBarChart", (M + 820 + G, CUERPO_Y, UTIL - 820 - G, 300),
                {"Category": proj(col("fct_movimiento", "tipo"), activo=True), "Y": proj(med("Líneas de movimiento"))},
-               "Registros por tipo de movimiento", "Gráfica de barras con el número de registros por tipo de movimiento.", 6),
-        visual("t_cedis", "tableEx", (20, 450, 1240, 250),
-               {"Values": proj(col("dim_almacen", "nombre"), med("Entradas (u)"), med("Salidas (u)"), med("Ajustes netos (u)"),
+               "Registros por tipo de movimiento", "Gráfica de barras con el número de registros por tipo de movimiento.", 6,
+               orden=(med("Líneas de movimiento"), "Descending")),
+        visual("t_cedis", "tableEx", (M, CUERPO_Y + 300 + G, 820, FONDO_Y - (CUERPO_Y + 300 + G)),
+               {"Values": proj(col("dim_almacen", "nombre", "CEDIS"), med("Entradas (u)"), med("Salidas (u)"), med("Ajustes netos (u)"),
                                med("Existencia (u)"), med("Venta diaria 30 d (u)"), med("Días de cobertura"), med("Disponibilidad"))},
                "Resumen por CEDIS", "Tabla por CEDIS con entradas, salidas, ajustes, existencia, venta diaria, días de cobertura y disponibilidad.", 7),
+        visual("b_cob", "clusteredBarChart", (M + 820 + G, CUERPO_Y + 300 + G, UTIL - 820 - G, FONDO_Y - (CUERPO_Y + 300 + G)),
+               {"Category": proj(col("dim_almacen", "nombre", "CEDIS"), activo=True), "Y": proj(med("Días de cobertura"))},
+               "Días de cobertura al último día", "Gráfica de barras con los días que alcanza la existencia de cada CEDIS a la venta de los últimos 30 días.", 8,
+               orden=(med("Días de cobertura"), "Descending")),
     ]),
-    ("validacion", "Validación", [
-        tarjeta("c_par", "Pares validados", (20, 20, 300, 100), "Pares CEDIS-producto contados", "Tarjeta con cuántas combinaciones de CEDIS y producto tienen conteo físico.", 1),
-        tarjeta("c_exa", "Coincidencia exacta", (330, 20, 300, 100), "Coincidencia exacta", "Tarjeta con la parte de los pares donde la existencia reconstruida es igual al conteo físico.", 2),
-        tarjeta("c_cer", "Acierto en cero", (640, 20, 300, 100), "Acierto al decir si estaba en cero", "Tarjeta con la parte de los pares donde la reconstrucción y el conteo coinciden en si había o no existencia.", 3),
-        tarjeta("c_err", "Error medio (u)", (950, 20, 310, 100), "Error medio (u)", "Tarjeta con la diferencia absoluta promedio entre reconstrucción y conteo.", 4),
-        visual("x_val", "scatterChart", (20, 135, 620, 565),
+    ("validacion", "Validación", encabezado("validacion", "Validación", "la reconstrucción contra un conteo físico hecho por otra vía") + fila(
+        ("c_par", "Pares validados", "Pares CEDIS-producto contados", "Tarjeta con cuántas combinaciones de CEDIS y producto tienen conteo físico."),
+        ("c_exa", "Coincidencia exacta", "Coincidencia exacta con el conteo", "Tarjeta con la parte de los pares donde la existencia reconstruida es igual al conteo físico."),
+        ("c_cer", "Acierto en cero", "Acierto al decir si estaba en cero", "Tarjeta con la parte de los pares donde la reconstrucción y el conteo coinciden en si había o no existencia."),
+        ("c_err", "Error medio (u)", "Error medio (u)", "Tarjeta con la diferencia absoluta promedio entre reconstrucción y conteo."),
+    ) + [
+        visual("x_val", "scatterChart", (M, CUERPO_Y, 500, FONDO_Y - CUERPO_Y),
                {"Category": proj(col("dim_producto", "sku"), activo=True), "X": proj(med("Conteo físico (u)")), "Y": proj(med("Reconstruido (u)"))},
-               "Conteo físico contra existencia reconstruida", "Gráfica de dispersión: cada punto es un producto; sobre la diagonal la reconstrucción coincide con el conteo.", 5),
-        visual("b_val", "barChart", (650, 135, 610, 250),
-               {"Category": proj(col("dim_almacen", "nombre"), activo=True), "Y": proj(med("Coincidencia exacta"), med("Acierto en cero"))},
+               "Conteo físico (X) contra existencia reconstruida (Y)", "Gráfica de dispersión: cada punto es un producto; sobre la diagonal la reconstrucción coincide con el conteo.", 5),
+        visual("b_val", "clusteredBarChart", (M + 500 + G, CUERPO_Y, UTIL - 500 - G, 250),
+               {"Category": proj(col("dim_almacen", "nombre", "CEDIS"), activo=True), "Y": proj(med("Coincidencia exacta"), med("Acierto en cero"))},
                "Calidad de la reconstrucción por CEDIS", "Gráfica de barras con coincidencia exacta y acierto en cero por CEDIS.", 6),
-        visual("t_dif", "tableEx", (650, 395, 610, 305),
-               {"Values": proj(col("dim_almacen", "nombre"), col("dim_producto", "producto"), med("Conteo físico (u)"), med("Reconstruido (u)"), med("Error medio (u)"))},
+        visual("t_dif", "tableEx", (M + 500 + G, CUERPO_Y + 250 + G, UTIL - 500 - G, FONDO_Y - (CUERPO_Y + 250 + G)),
+               {"Values": proj(col("dim_almacen", "nombre", "CEDIS"), col("dim_producto", "producto", "Producto"), med("Conteo físico (u)"), med("Reconstruido (u)"), med("Error medio (u)"))},
                "Productos con mayor diferencia", "Tabla de productos ordenada por la diferencia entre conteo y reconstrucción.", 7,
                orden=(med("Error medio (u)"), "Descending")),
     ]),
@@ -282,11 +425,15 @@ def construir_reporte(base):
     jdump(os.path.join(d, "version.json"), {
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/versionMetadata/1.0.0/schema.json",
         "version": "2.0.0"})
+    jdump(os.path.join(base, "StaticResources", "RegisteredResources", NOMBRE_TEMA), TEMA)
+    version_import = {"visual": "1.8.91", "report": "2.0.91", "page": "1.3.91"}
     jdump(os.path.join(d, "report.json"), {
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
-        "themeCollection": {"baseTheme": {"name": "CY24SU06",
-                                          "reportVersionAtImport": {"visual": "1.8.91", "report": "2.0.91", "page": "1.3.91"},
-                                          "type": "SharedResources"}},
+        "themeCollection": {
+            "baseTheme": {"name": "CY24SU06", "reportVersionAtImport": version_import, "type": "SharedResources"},
+            "customTheme": {"name": NOMBRE_TEMA, "reportVersionAtImport": version_import, "type": "RegisteredResources"}},
+        "resourcePackages": [{"name": "RegisteredResources", "type": "RegisteredResources",
+                              "items": [{"name": NOMBRE_TEMA, "path": NOMBRE_TEMA, "type": "CustomTheme"}]}],
         "settings": {"useStylableVisualContainerHeader": True, "defaultDrillFilterOtherVisuals": True,
                      "allowChangeFilterTypes": True, "useEnhancedTooltips": True, "useDefaultAggregateDisplayName": True}})
     jdump(os.path.join(d, "pages", "pages.json"), {
@@ -303,13 +450,20 @@ def main():
     for sub in (f"{NOMBRE}.Report", f"{NOMBRE}.SemanticModel"):
         p = os.path.join(RAIZ, sub)
         if os.path.isdir(p):
-            # conservar la caché local de Power BI no aporta nada: se regenera al abrir
-            shutil.rmtree(p)
+            # se borran los archivos generados; las carpetas vacías se toleran porque
+            # OneDrive puede retenerlas un momento mientras sincroniza
+            for raiz, _, archivos in os.walk(p, topdown=False):
+                for a in archivos:
+                    os.remove(os.path.join(raiz, a))
+                try:
+                    os.rmdir(raiz)
+                except OSError:
+                    pass
     construir_modelo(os.path.join(RAIZ, f"{NOMBRE}.SemanticModel"))
     construir_reporte(os.path.join(RAIZ, f"{NOMBRE}.Report"))
     jdump(os.path.join(RAIZ, f"{NOMBRE}.pbip"),
           {"version": "1.0", "artifacts": [{"report": {"path": f"{NOMBRE}.Report"}}], "settings": {}})
-    escribir(os.path.join(RAIZ, ".gitignore"), "**/.pbi/localSettings.json\n**/.pbi/cache.abf\n")
+    escribir(os.path.join(RAIZ, ".gitignore"), "**/.pbi/localSettings.json\n**/.pbi/cache.abf\n__pycache__/\n")
     print("PBIP escrito en", RAIZ)
 
 

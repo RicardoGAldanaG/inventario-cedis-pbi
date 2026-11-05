@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "c_exa",
   "position": {
-    "x": 330,
-    "y": 20,
+    "x": 331,
+    "y": 72,
     "z": 2,
-    "height": 100,
-    "width": 300,
+    "height": 92,
+    "width": 303,
     "tabOrder": 2000
   },
   "visual": {
@@ -48,7 +48,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Coincidencia exacta'"
+                  "Value": "'Coincidencia exacta con el conteo'"
                 }
               }
             }
