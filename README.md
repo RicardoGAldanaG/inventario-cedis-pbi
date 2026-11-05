@@ -36,6 +36,7 @@ La reconstrucción se hace dos veces, en SQL y en Python, y el resultado es idé
 | `04_vistas_pbi.sql` | Capa de consumo `pbi.*` con las mismas columnas que el modelo |
 | `05_pruebas.sql` | 6 pruebas de integridad: último día = saldo, rejilla completa, cambio diario = neto del libro, sin negativos, universo del conteo, rachas = días en cero |
 | `06_comparar_python.sql` | Comparación fila por fila contra la salida de Python |
+| `consultas_practica.sql` | 10 consultas de análisis (agregaciones, huecos e islas, cobertura, `RANK() OVER`) y un ejercicio |
 
 ```powershell
 .\sql\pg_local.ps1 crear      # una vez: clúster local en el puerto 5433, solo localhost
